@@ -5,3 +5,9 @@ jobs:
       - image: mikesupertrampster/terraform
     steps:
       - checkout
+
+workflows:
+  version: 2
+  master:
+    jobs:
+      - myjob
