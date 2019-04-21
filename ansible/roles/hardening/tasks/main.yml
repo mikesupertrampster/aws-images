@@ -1,0 +1,81 @@
+---
+
+- name: Secure shared memory
+  mount:
+    path: /run/shm
+    src: tmpfs
+    fstype: tmpfs
+    opts: defaults,noexec,nosuid
+    state: present
+
+- name: IP Spoofing protection - net.ipv4.conf.all.rp_filter
+  sysctl:
+    name: net.ipv4.conf.all.rp_filter
+    value: 1
+    state: present
+
+- name: IP Spoofing protection - net.ipv4.conf.default.rp_filter
+  sysctl:
+    name: net.ipv4.conf.default.rp_filter
+    value: 1
+    state: present
+
+- name: Disable source packet routing - net.ipv4.conf.all.accept_source_route
+  sysctl:
+    name: net.ipv4.conf.all.accept_source_route
+    value: 0
+    state: present
+
+- name: Disable source packet routing - net.ipv6.conf.all.accept_source_route
+  sysctl:
+    name: net.ipv6.conf.all.accept_source_route
+    value: 0
+    state: present
+
+- name: Disable source packet routing - net.ipv4.conf.default.accept_source_route
+  sysctl:
+    name: net.ipv4.conf.default.accept_source_route
+    value: 0
+    state: present
+
+- name: Disable source packet routing - net.ipv6.conf.default.accept_source_route
+  sysctl:
+    name: net.ipv6.conf.default.accept_source_route
+    value: 0
+    state: present
+
+- name: Ignore send redirects - net.ipv4.conf.all.send_redirects
+  sysctl:
+    name: net.ipv4.conf.all.send_redirects
+    value: 0
+    state: present
+
+- name: Ignore send redirects - net.ipv4.conf.default.send_redirects
+  sysctl:
+    name: net.ipv4.conf.default.send_redirects
+    value: 0
+    state: present
+
+- name: Block SYN attacks - net.ipv4.tcp_syncookies
+  sysctl:
+    name: net.ipv4.tcp_syncookies
+    value: 1
+    state: present
+
+- name: Block SYN attacks - net.ipv4.tcp_max_syn_backlog
+  sysctl:
+    name: net.ipv4.tcp_max_syn_backlog
+    value: 2048
+    state: present
+
+- name: Block SYN attacks - net.ipv4.tcp_max_syn_backlog
+  sysctl:
+    name: net.ipv4.tcp_max_syn_backlog
+    value: 2
+    state: present
+
+- name: Block SYN attacks - net.ipv4.tcp_syn_retries
+  sysctl:
+    name: net.ipv4.tcp_syn_retries
+    value: 5
+    state: present

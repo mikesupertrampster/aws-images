@@ -1,0 +1,15 @@
+---
+- hosts: all
+  become: yes
+  vars:
+  pre_tasks:
+    - name: gather ec2 facts
+      action: ec2_metadata_facts
+      tags:
+        - always
+
+- hosts: base
+  become: yes
+  roles:
+    - base
+    - hardening

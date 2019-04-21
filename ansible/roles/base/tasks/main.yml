@@ -1,0 +1,32 @@
+---
+
+- name: Install list of packages - apt
+  apt: name={{item}} state=installed state=latest
+  with_items:
+    - unzip
+    - python-pip
+    - jq
+
+- name: Remove list of packages - apt
+  apt: name={{item}} state=installed state=latest
+  with_items:
+    - unattended-upgrades
+
+- name: Install list of packages - pip
+  pip: name={{item}} state=installed state=latest
+  with_items:
+    - awscli
+    - boto3
+    - requests
+
+- name: Disable APT Update-Package-Lists
+  lineinfile:
+    path: /etc/apt/apt.conf.d/20auto-upgrades
+    regexp: '^APT::Periodic::Update-Package-Lists'
+    line: 'APT::Periodic::Update-Package-Lists "0";'
+
+- name: Disable APT Unattended-Upgrade
+  lineinfile:
+    path: /etc/apt/apt.conf.d/20auto-upgrades
+    regexp: '^APT::Periodic::Unattended-Upgrade'
+    line: 'APT::Periodic::Unattended-Upgrade "0";'
