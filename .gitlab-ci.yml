@@ -1,0 +1,13 @@
+image:
+  name: mikesupertrampster/packer
+
+stages:
+- tag-source
+
+tag-source:
+  stage: tag-source
+  only:
+  - master
+  script:
+    - export SEMVER=$(.scripts/gen-semver.py)
+    - echo ${SEMVER}

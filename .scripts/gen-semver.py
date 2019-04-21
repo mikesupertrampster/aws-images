@@ -26,7 +26,7 @@ def main():
     else:
         version = bump(latest)
 
-    tag_repo(version)
+    # tag_repo(version)
     print(version)
     return 0
 
