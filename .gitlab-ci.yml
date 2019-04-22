@@ -10,5 +10,6 @@ tag-source:
   - master
   script:
     - export SEMVER=$(.scripts/gen-semver.py)
-    - git describe --tags
+    - .scripts/gen-semver.py
     - echo ${SEMVER}
+    - git describe --tags
