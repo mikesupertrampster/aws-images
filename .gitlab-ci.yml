@@ -15,8 +15,8 @@ tag-source:
     paths:
       - semver
 
-build-ami:
-  stage: build-ami
+build:
+  stage: build
   only:
   - master
   script:
