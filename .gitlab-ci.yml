@@ -3,13 +3,21 @@ image:
 
 stages:
 - tag-source
+- build
 
 tag-source:
   stage: tag-source
   only:
   - master
   script:
-    - export SEMVER=$(.scripts/gen-semver.py)
-    - .scripts/gen-semver.py
-    - echo ${SEMVER}
-    - git describe --tags
+    - scripts/gen-semver.py > semver
+  artifacts:
+    paths:
+      - semver
+
+build-ami:
+  stage: build-ami
+  only:
+  - master
+  script:
+    - cat semver
