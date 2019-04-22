@@ -10,7 +10,7 @@ tag-source:
   only:
   - master
   script:
-    - scripts/gen-semver.py > semver
+    - .scripts/gen-semver.py > semver
   artifacts:
     paths:
       - semver
@@ -19,5 +19,8 @@ build:
   stage: build
   only:
   - master
+#    changes:
+#      - ansible/roles/base/**/*
+#      - ansible/roles/hardening/**/*
   script:
     - cat semver
