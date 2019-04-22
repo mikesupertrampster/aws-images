@@ -3,7 +3,7 @@ image:
 
 stages:
 - tag-source
-- build
+- build-base
 
 tag-source:
   stage: tag-source
@@ -15,12 +15,15 @@ tag-source:
     paths:
       - semver
 
-build:
-  stage: build
+build-base:
+  stage: build-base
+  variables:
+    role: base
   only:
   - master
 #    changes:
 #      - ansible/roles/base/**/*
 #      - ansible/roles/hardening/**/*
   script:
-    - cat semver
+    - export VERSION_NO=$(cat semver)
+    - packer build packer/${role}.json
