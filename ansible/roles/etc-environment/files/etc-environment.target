@@ -1,0 +1,4 @@
+[Unit]
+Description=Seed /etc/environment from cloud-config
+Requires=etc-environment.service
+After=etc-environment.service

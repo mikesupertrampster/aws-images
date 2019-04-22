@@ -7,7 +7,7 @@
     "aws_instance_type": "t2.micro",
     "aws_vpc_id": "",
     "aws_subnet_id": "",
-    "image_name": "base",
+    "image_name": "vault",
     "ssh_username": "ubuntu",
     "build_author": "{{env `GITLAB_USER_NAME`}}",
     "build_uuid": "{{env `CI_JOB_ID`}}",
@@ -17,7 +17,7 @@
   },
   "builders": [
     {
-      "name": "base",
+      "name": "vault",
       "type": "amazon-ebs",
       "access_key": "{{user `aws_access_key`}}",
       "secret_key": "{{user `aws_secret_key`}}",
@@ -25,10 +25,11 @@
       "source_ami_filter": {
         "filters": {
           "virtualization-type": "hvm",
-          "name": "ubuntu-minimal/images/hvm-ssd/ubuntu-bionic-18.04-amd64-minimal-*",
-          "root-device-type": "ebs"
+          "name": "base-*",
+          "root-device-type": "ebs",
+          "tag:AcceptanceTested": "True"
         },
-        "owners": ["099720109477"],
+        "owners": ["{{env `AWS_ACCOUNT_ID`}}"],
         "most_recent": true
       },
       "vpc_id": "{{user `aws_vpc_id`}}",
@@ -37,10 +38,11 @@
       "ssh_username": "{{user `ssh_username`}}",
       "ami_name": "{{user `image_name`}}-{{user `version_no`}}",
       "ami_regions": "{{user `aws_build_regions`}}",
+      "ami_users": ["{{env `AWS_ACCOUNT_ID`}}"],
       "ssh_pty": "true",
       "tags": {
-        "Name": "base-{{user `version_no`}}",
-        "Role": "base",
+        "Name": "vault-{{user `version_no`}}",
+        "Role": "vault",
         "BaseAMI": "{{.SourceAMIName}}",
         "BaseAMIId": "{{.SourceAMI}}",
         "BuildDate": "{{isotime}}",
@@ -50,7 +52,6 @@
         "GitBranch": "{{user `build_branch`}}",
         "SecurityAssessment": "",
         "AcceptanceTested": ""
-
       },
       "run_tags": {
         "Name": "aws-images-{{ build_name }}-{{user `version_no`}}"
@@ -59,21 +60,16 @@
   ],
   "provisioners": [
     {
-      "type": "shell",
-      "execute_command" : "echo 'packer' | sudo -S sh -c '{{ .Vars }} {{ .Path }}'",
-      "script": "packer/scripts/install.sh"
-    },
-    {
       "type": "ansible-local",
       "playbook_file": "packer/playbook.yml",
-      "inventory_groups": "base",
+      "inventory_groups": "vault",
       "playbook_dir": "ansible/"
     }
   ],
   "post-processors": [
     {
       "type": "manifest",
-      "output": "base-manifest.json"
+      "output": "vault-manifest.json"
     }
   ]
 }

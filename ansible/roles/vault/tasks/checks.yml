@@ -1,0 +1,7 @@
+---
+
+- name: Copy vault check file
+  copy:
+    src: vault-check.py
+    dest: /opt/check/checks.d
+    mode: 0755

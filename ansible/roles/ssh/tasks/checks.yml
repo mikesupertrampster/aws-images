@@ -1,0 +1,7 @@
+---
+
+- name: Install check file
+  template:
+    src: import-users-check.py
+    dest: /opt/check/checks.d/import-users-check.py
+    mode: 0755

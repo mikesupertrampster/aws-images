@@ -1,0 +1,30 @@
+---
+
+- name: Install pip
+  apt:
+    name: python-pip
+
+- name: Install cloudFormation helper scripts
+  pip:
+    name: https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-latest.tar.gz
+
+- name: Install cfn-signal target
+  template:
+    src: cfn-signal.target
+    dest: /etc/systemd/system/cfn-signal.target
+
+- name: Set cfn-signal runlevel
+  command: systemctl set-default cfn-signal.target
+
+- name: Install systemd unit
+  template:
+    src: cfn-signal.service
+    dest: /etc/systemd/system/cfn-signal.service
+
+- name: Enable systemd service
+  service:
+    name: cfn-signal
+    enabled: yes
+
+- name: Checks
+  include: checks.yml

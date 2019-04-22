@@ -1,0 +1,31 @@
+---
+
+- name: Pip install retry
+  pip:
+    name: retry
+
+- name: Pip install hvac
+  pip:
+    name: hvac
+
+- name: Create check directory
+  file:
+    path: /opt/check/checks.d
+    state: directory
+
+- name: Create python package
+  copy:
+    content: ""
+    dest: /opt/check/checks.d/__init__.py
+
+- name: Install check-node file
+  template:
+    src: check-node.py
+    dest: /opt/check/check-node.py
+    mode: 0755
+
+- name: Install abstract class file
+  template:
+    src: base.py
+    dest: /opt/check/checks.d/base.py
+    mode: 0755

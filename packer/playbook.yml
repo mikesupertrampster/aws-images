@@ -13,3 +13,13 @@
   roles:
     - base
     - hardening
+
+- hosts: vault
+  become: yes
+  vars:
+    - vault_storage_dynamodb: true
+  roles:
+    - etc-environment
+    - cfn-tools
+    - ssh
+    - vault

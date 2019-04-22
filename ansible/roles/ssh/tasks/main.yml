@@ -1,0 +1,34 @@
+---
+- name: Install ssh helper scripts
+  template:
+    src: "{{item}}"
+    dest: "/opt/{{item}}"
+    owner: root
+    mode: 0755
+  with_items:
+  - authorized_keys_command.sh
+  - import_users.sh
+
+- name: Install iam-user polling unit files
+  template:
+    src: "{{item}}"
+    dest: "/etc/systemd/system/{{item}}"
+    owner: root
+    mode: 0644
+  with_items:
+  - import-users.service
+  - import-users.timer
+
+- name: Enable service import-user and not touch the running state
+  service:
+    name: "{{item}}"
+    enabled: yes
+  with_items:
+  - import-users.service
+  - import-users.timer
+
+- name: Configure SSH
+  include: configure-ssh.yml
+
+- name: Checks
+  include: checks.yml

@@ -1,0 +1,17 @@
+---
+
+- name: Add script to sshd config
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    line: 'AuthorizedKeysCommand /opt/authorized_keys_command.sh'
+
+- name: Set authorized command user to sshd config
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    line: 'AuthorizedKeysCommandUser nobody'
+
+- name: Disable SSH root logins
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: 'PermitRootLogin .*'
+    line: 'PermitRootLogin no'

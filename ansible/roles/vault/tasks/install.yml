@@ -1,0 +1,70 @@
+---
+
+- name: Install role packages - apt
+  apt:
+    name: "{{ packages }}"
+    state: latest
+  vars:
+    packages:
+      - libcap2-bin
+      - certbot
+      - python3-certbot-dns-route53
+
+- name: Install list of packages - pip
+  pip:
+    name: "{{ packages }}"
+    state: latest
+  vars:
+    packages:
+      - hvac
+
+- name: Install vault (v{{ vault_version }})
+  unarchive:
+    src: https://releases.hashicorp.com/vault/{{ vault_version }}/vault_{{ vault_version }}_linux_amd64.zip
+    dest: /usr/local/bin
+    creates: /usr/local/bin/vault
+    copy: no
+
+- name: Ensure user
+  user:
+    name: vault
+    home: /var/lib/vault
+    shell: /bin/false
+    createhome: no
+
+- name: Ensure config directory
+  file:
+    path: /etc/vault/conf.d
+    state: directory
+    owner: vault
+
+- name: Ensure state directories
+  file:
+    path: "{{ item }}"
+    owner: vault
+    group: vault
+    state: directory
+  with_items:
+    - /var/lib/vault
+    - /var/log/vault
+
+- name: Copy launch script
+  template:
+    src: vault.service.j2
+    dest: /etc/systemd/system/vault.service
+
+- name: Enable vault service
+  service:
+    name: vault
+    enabled: yes
+
+- name: Allow vault to use cap_ipc_lock
+  command: "setcap cap_ipc_lock=+ep /usr/local/bin/vault"
+
+- name: Copy vault auto-unseal helper
+  copy:
+    src: vault-autounseal.py
+    dest: /var/lib/vault
+    owner: vault
+    group: vault
+    mode: 0755

@@ -1,0 +1,29 @@
+[Unit]
+Description=Vault Service
+After=etc-environment.service
+Requires=cloud-config.target
+
+[Service]
+User=vault
+ExecStartPre=/bin/bash -c "echo VAULT_CLUSTER_ADDR=https://$(curl -s http://169.254.169.254/latest/meta-data/local-ipv4):8201  > /etc/vault/vault_address"
+ExecStartPre=/usr/bin/certbot certonly -d "${VAULT_FQDN}" \
+                           --config-dir=/etc/vault/letsencrypt/config \
+                           --work-dir=/etc/vault/letsencrypt/work \
+                           --logs-dir=/etc/vault/letsencrypt/logs \
+                           --agree-tos --non-interactive \
+                           --dns-route53 -m ${CONTACT_EMAIL} \
+                           --server ${LETSENCRYPT_API}
+ExecStartPre=/bin/bash -c "if [ ! -L /etc/vault/tls ]; then ln -s /etc/vault/letsencrypt/config/live/${VAULT_FQDN}/ /etc/vault/tls; fi"
+
+EnvironmentFile=/etc/environment
+EnvironmentFile=-/etc/vault/vault_address
+ExecStart=/usr/local/bin/vault server -config=/etc/vault/conf.d
+ExecStartPost=/var/lib/vault/vault-autounseal.py
+
+ExecReload=/bin/kill -HUP $MAINPID
+KillMode=process
+Restart=on-failure
+RestartSec=30s
+
+[Install]
+WantedBy=multi-user.target

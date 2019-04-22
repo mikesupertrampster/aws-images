@@ -1,0 +1,15 @@
+[Unit]
+Description=Notify ASG
+After=multi-user.target
+StartLimitInterval=200
+StartLimitBurst=5
+
+[Service]
+Type=simple
+ExecStart=/opt/check/check-node.py
+EnvironmentFile=/etc/environment
+Restart=on-failure
+RestartSec=30
+
+[Install]
+WantedBy=cfn-signal.target

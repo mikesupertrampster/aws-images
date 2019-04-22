@@ -1,0 +1,8 @@
+[Unit]
+Description=Create users based on iam group
+After=multi-user.target
+
+[Service]
+Type=oneshot
+EnvironmentFile=/etc/environment
+ExecStart=/opt/import_users.sh

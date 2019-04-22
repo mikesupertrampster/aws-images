@@ -4,14 +4,33 @@ image:
 stages:
   - tag-source
   - build-base
+  - build
+
+#------------------------------------------------------------------------------
+# .build
+#------------------------------------------------------------------------------
+
+.build:
+  stage: build
+  script:
+    - export VERSION_NO=$(cat semver)
+    - export AWS_ACCOUNT_ID=$(aws sts get-caller-identity --output text --query 'Account')
+    - packer build packer/${role}.json
+  artifacts:
+    paths:
+    - ${role}-manifest.json
+
+#------------------------------------------------------------------------------
+# jobs
+#------------------------------------------------------------------------------
 
 tag-source:
   stage: tag-source
   only:
-    changes:
-      - ansible/**/*
     refs:
       - master
+    changes:
+      - ansible/**/*
   script:
     - .scripts/git-tag.sh
   artifacts:
@@ -19,15 +38,26 @@ tag-source:
       - semver
 
 build-base:
+  extends: .build
   stage: build-base
   variables:
     role: base
   only:
+    refs:
+      - master
     changes:
       - ansible/roles/base/**/*
       - ansible/roles/hardening/**/*
+
+build:vault:
+  extends: .build
+  variables:
+    role: vault
+  only:
     refs:
       - master
-  script:
-    - export VERSION_NO=$(cat semver)
-    - packer build packer/${role}.json
+    changes:
+    - ansible/roles/cfn-tools/**/*
+    - ansible/roles/etc-environment/**/*
+    - ansible/roles/ssh/**/*
+    - ansible/roles/vault/**/*
