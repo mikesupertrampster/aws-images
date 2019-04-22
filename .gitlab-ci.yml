@@ -2,15 +2,16 @@ image:
   name: mikesupertrampster/packer
 
 stages:
-- tag-source
-- build-base
+  - tag-source
+  - build-base
 
 tag-source:
   stage: tag-source
   only:
-  - master
-  - changes:
+    changes:
       - ansible/**/*
+    refs:
+      - master
   script:
     - mkdir -p ~/.ssh && echo "${GITHUB_DEPLOY_KEY}" > ~/.ssh/id_rsa && chmod 200  ~/.ssh/id_rsa
     - echo -e "Host *\n    StrictHostKeyChecking no" > ~/.ssh/config
@@ -27,10 +28,11 @@ build-base:
   variables:
     role: base
   only:
-  - master
-  - changes:
+    changes:
       - ansible/roles/base/**/*
       - ansible/roles/hardening/**/*
+    refs:
+      - master
   script:
     - export VERSION_NO=$(cat semver)
     - packer build packer/${role}.json
