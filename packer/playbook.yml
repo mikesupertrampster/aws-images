@@ -14,6 +14,14 @@
     - base
     - hardening
 
+- hosts: bastion
+  become: yes
+  vars:
+  roles:
+    - etc-environment
+    - cfn-tools
+    - ssh
+
 - hosts: vault
   become: yes
   vars:

@@ -1,0 +1,76 @@
+{
+  "variables": {
+    "aws_account_id": "{{env `AWS_ACCOUNT_ID`}}",
+    "aws_access_key": "",
+    "aws_secret_key": "",
+    "aws_region": "eu-west-1",
+    "aws_build_regions": "eu-west-1",
+    "aws_instance_type": "t2.micro",
+    "aws_vpc_id": "",
+    "aws_subnet_id": "",
+    "image_name": "bastion",
+    "ssh_username": "ubuntu",
+    "build_author": "{{env `GITLAB_USER_NAME`}}",
+    "build_uuid": "{{env `CI_JOB_ID`}}",
+    "build_commit": "{{env `CI_COMMIT_SHA`}}",
+    "build_branch": "{{env `CI_COMMIT_REF_NAME`}}",
+    "version_no": "{{env `VERSION_NO`}}"
+  },
+  "builders": [
+    {
+      "name": "bastion",
+      "type": "amazon-ebs",
+      "access_key": "{{user `aws_access_key`}}",
+      "secret_key": "{{user `aws_secret_key`}}",
+      "region": "{{user `aws_region`}}",
+      "source_ami_filter": {
+        "filters": {
+          "virtualization-type": "hvm",
+          "name": "base-*",
+          "root-device-type": "ebs",
+          "tag:AcceptanceTested": "True"
+        },
+        "owners": ["{{user `aws_account_id`}}"],
+        "most_recent": true
+      },
+      "vpc_id": "{{user `aws_vpc_id`}}",
+      "instance_type": "{{user `aws_instance_type`}}",
+      "subnet_id": "{{user `aws_subnet_id`}}",
+      "ssh_username": "{{user `ssh_username`}}",
+      "ami_name": "{{user `image_name`}}-{{user `version_no`}}",
+      "ami_regions": "{{user `aws_build_regions`}}",
+      "ami_users": ["{{user `aws_account_id`}}"],
+      "ssh_pty": "true",
+      "tags": {
+        "Name": "bastion-{{user `version_no`}}",
+        "Role": "bastion",
+        "BaseAMI": "{{.SourceAMIName}}",
+        "BaseAMIId": "{{.SourceAMI}}",
+        "BuildDate": "{{isotime}}",
+        "BuildAuthor": "{{user `build_author`}}",
+        "BuildUUID": "{{uuid}}",
+        "GitCommit": "{{user `build_commit`}}",
+        "GitBranch": "{{user `build_branch`}}",
+        "SecurityAssessment": "",
+        "AcceptanceTested": ""
+      },
+      "run_tags": {
+        "Name": "aws-images-{{ build_name }}-{{user `version_no`}}"
+      }
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "ansible-local",
+      "playbook_file": "packer/playbook.yml",
+      "inventory_groups": "bastion",
+      "playbook_dir": "ansible/"
+    }
+  ],
+  "post-processors": [
+    {
+      "type": "manifest",
+      "output": "bastion-manifest.json"
+    }
+  ]
+}

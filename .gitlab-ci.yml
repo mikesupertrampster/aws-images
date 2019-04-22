@@ -49,6 +49,18 @@ build-base:
       - ansible/roles/base/**/*
       - ansible/roles/hardening/**/*
 
+build:bastion:
+  extends: .build
+  variables:
+    role: bastion
+  only:
+    refs:
+      - master
+    changes:
+    - ansible/roles/cfn-tools/**/*
+    - ansible/roles/etc-environment/**/*
+    - ansible/roles/ssh/**/*
+
 build:vault:
   extends: .build
   variables:
