@@ -10,5 +10,6 @@ AWS AMI
 
 ```bash
 export VERSION_NO=1.0.0
+export role=vault
 packer build packer/${role}.json
 ```
