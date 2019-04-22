@@ -5,6 +5,10 @@ AWS AMI
 [![GitLabCI](https://gitlab.com/mikesupertrampsters/aws-images/badges/master/pipeline.svg
 )](https://gitlab.com/mikesupertrampsters/aws-images)
 
+Builds the following AMIs:
+ * Base (hardened)
+ * Bastion
+ * Vault (v1.1.1)
 
 ### Usage
 
