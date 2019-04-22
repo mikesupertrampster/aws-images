@@ -10,8 +10,8 @@ tag-source:
   only:
   - master
   script:
-    - export GIT_SSH_COMMAND="ssh -i ~/.ssh/gitlab_deploy -o 'StrictHostKeyChecking no'"
-    - mkdir -p ~/.ssh && echo "${GITLAB_DEPLOY_KEY}" | base64 -d > ~/.ssh/gitlab_deploy && chmod 200  ~/.ssh/gitlab_deploy
+    - export GIT_SSH_COMMAND="ssh -i ~/.ssh/id_rsa -o 'StrictHostKeyChecking no'"
+    - mkdir -p ~/.ssh && echo "${GITLAB_DEPLOY_KEY}" > ~/.ssh/id_rsa && chmod 200  ~/.ssh/id_rsa
     - git config --global user.email "Gitlab CI"
     - git config --global user.name "Gitlab CI"
     - .scripts/gen-semver.py > semver
