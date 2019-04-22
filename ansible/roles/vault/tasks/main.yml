@@ -6,7 +6,7 @@
     - install
 
 - name: Config
-  include: vault-confg.yml
+  include: vault-config.yml
 
 - name: Checks
   include: checks.yml
