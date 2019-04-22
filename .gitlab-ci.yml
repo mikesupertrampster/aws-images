@@ -28,7 +28,7 @@ build-base:
     role: base
   only:
   - master
-    changes:
+  - changes:
       - ansible/roles/base/**/*
       - ansible/roles/hardening/**/*
   script:
