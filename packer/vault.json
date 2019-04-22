@@ -52,7 +52,8 @@
         "GitCommit": "{{user `build_commit`}}",
         "GitBranch": "{{user `build_branch`}}",
         "SecurityAssessment": "",
-        "AcceptanceTested": ""
+        "AcceptanceTested": "",
+        "ApprovedFor": ""
       },
       "run_tags": {
         "Name": "aws-images-{{ build_name }}-{{user `version_no`}}"
