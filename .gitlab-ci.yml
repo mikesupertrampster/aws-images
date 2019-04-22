@@ -13,7 +13,7 @@ tag-source:
     refs:
       - master
   script:
-    - .scripts/git-changes.py
+    - .scripts/git-tag.sh
   artifacts:
     paths:
       - semver
