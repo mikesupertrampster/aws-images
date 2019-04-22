@@ -9,6 +9,8 @@ tag-source:
   stage: tag-source
   only:
   - master
+  - changes:
+      - ansible/**/*
   script:
     - mkdir -p ~/.ssh && echo "${GITHUB_DEPLOY_KEY}" > ~/.ssh/id_rsa && chmod 200  ~/.ssh/id_rsa
     - echo -e "Host *\n    StrictHostKeyChecking no" > ~/.ssh/config
@@ -26,9 +28,9 @@ build-base:
     role: base
   only:
   - master
-#    changes:
-#      - ansible/roles/base/**/*
-#      - ansible/roles/hardening/**/*
+    changes:
+      - ansible/roles/base/**/*
+      - ansible/roles/hardening/**/*
   script:
     - export VERSION_NO=$(cat semver)
     - packer build packer/${role}.json
