@@ -48,6 +48,12 @@
     - /var/lib/vault
     - /var/log/vault
 
+- name: Install certbot script
+  copy:
+    src: certbot.sh
+    dest: /usr/local/bin/certbot.sh
+    mode: 0755
+
 - name: Copy launch script
   template:
     src: vault.service.j2
@@ -60,11 +66,3 @@
 
 - name: Allow vault to use cap_ipc_lock
   command: "setcap cap_ipc_lock=+ep /usr/local/bin/vault"
-
-- name: Copy vault auto-unseal helper
-  copy:
-    src: vault-autounseal.py
-    dest: /var/lib/vault
-    owner: vault
-    group: vault
-    mode: 0755

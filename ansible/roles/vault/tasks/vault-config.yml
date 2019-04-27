@@ -1,26 +1,34 @@
 ---
 
-- name: Configure vault agent (base)
+- name: Configure vault (base)
   template:
     src: base.hcl.j2
     dest: /etc/vault/conf.d/10-base.hcl
   tags:
-  - configure
+    - configure
 
-- name: Configure vault agent (telemetry)
+- name: Configure vault (telemetry)
   template:
     src: telemetry.hcl.j2
     dest: /etc/vault/conf.d/20-telemetry.hcl
   tags:
     - configure
 
-- name: Configure vault agent (dynamodb storage backend)
+- name: Configure vault (dynamodb storage backend)
   template:
     src: dynamodb.hcl.j2
     dest: /etc/vault/conf.d/30-dynamodb.hcl
   when: vault_storage_dynamodb
   tags:
-  - configure
+    - configure
+
+- name: Install vault configuration generator (seal awskms)
+  copy:
+    src: seal.hcl.sh
+    dest: /usr/local/bin/seal.hcl.sh
+    mode: 0755
+  tags:
+    - configure
 
 - name: Configure tcp kernel settings
   sysctl:
