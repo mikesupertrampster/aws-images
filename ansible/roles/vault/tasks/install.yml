@@ -56,15 +56,15 @@
     src: vault.service.j2
     dest: /etc/systemd/system/vault.service
 
-- name: Enable vault service
-  service:
-    name: vault
-    enabled: yes
-
-- name: Allow vault to use cap_ipc_lock
-  command: "setcap cap_ipc_lock=+ep /usr/local/bin/vault"
-
 - name: Add VAULT_SKIP_VERIFY=true to ./bashrc
   lineinfile:
     path: /root/.bashrc
     line: 'export VAULT_SKIP_VERIFY=true'
+
+- name: Allow vault to use cap_ipc_lock
+  command: "setcap cap_ipc_lock=+ep /usr/local/bin/vault"
+
+- name: Enable vault service
+  service:
+    name: vault
+    enabled: yes
