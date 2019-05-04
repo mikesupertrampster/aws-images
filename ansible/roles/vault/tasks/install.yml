@@ -52,6 +52,7 @@
   with_items:
     - /var/lib/vault
     - /var/log/vault
+    - "{{ vault_tls_dir }}"
 
 - name: Install cert request script
   template:
