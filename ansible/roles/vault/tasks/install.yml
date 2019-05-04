@@ -7,16 +7,6 @@
     update_cache: yes
     cache_valid_time: 86400
 
-- name: Install role packages - apt
-  apt:
-    name: "{{ packages }}"
-    state: latest
-  vars:
-    packages:
-      - libcap2-bin
-      - certbot
-      - python3-certbot-dns-route53
-
 - name: Install list of packages - pip
   pip:
     name: "{{ packages }}"
@@ -57,7 +47,7 @@
 
 - name: Install cert request script
   template:
-    src: certbot.sh.j2
+    src: req_cert.sh.j2
     dest: /usr/local/bin/req_cert.sh
     mode: 0755
 
