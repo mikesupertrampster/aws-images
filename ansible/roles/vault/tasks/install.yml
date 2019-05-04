@@ -55,10 +55,10 @@
     - /var/lib/vault
     - /var/log/vault
 
-- name: Install certbot script
-  copy:
-    src: certbot.sh
-    dest: /usr/local/bin/certbot.sh
+- name: Install cert request script
+  template:
+    src: certbot.sh.j2
+    dest: /usr/local/bin/req_cert.sh
     mode: 0755
 
 - name: Copy launch script
@@ -73,3 +73,8 @@
 
 - name: Allow vault to use cap_ipc_lock
   command: "setcap cap_ipc_lock=+ep /usr/local/bin/vault"
+
+- name: Add VAULT_SKIP_VERIFY=true to ./bashrc
+  lineinfile:
+    path: /root/.bashrc
+    line: 'export VAULT_SKIP_VERIFY=true'
