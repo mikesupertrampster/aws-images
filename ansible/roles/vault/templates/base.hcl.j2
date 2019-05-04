@@ -2,7 +2,7 @@ ui = true
 
 listener "tcp" {
   address = "0.0.0.0:8200"
-  tls_cert_file = "/etc/vault/tls/fullchain.pem"
-  tls_key_file = "/etc/vault/tls/privkey.pem"
+  tls_cert_file = "{{ vault_tls_cert_path }}"
+  tls_key_file = "{{ vault_tls_key_path }}"
   tls_disable_client_certs = true
 }

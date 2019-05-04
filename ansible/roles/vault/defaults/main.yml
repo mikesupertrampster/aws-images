@@ -1,2 +1,5 @@
 vault_version: 1.1.1
 vault_storage_dynamodb: false
+vault_tls_dir: /etc/vault/tls
+vault_tls_cert_path: "{{ vault_tls_dir }}/cert.pem"
+vault_tls_key_path: "{{ vault_tls_dir }}/key.pem"
