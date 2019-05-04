@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 
 cn=${1:-"example.com"}
-/bin/openssl req \
-             -new \
-             -newkey rsa:4096 \
-             -x509 \
-             -sha256 \
-             -days 365 \
-             -nodes \
-             -subj "/C=GB/ST=London/L=London/O=IT/OU=IT/CN=${cn}" \
-             -out "{{ vault_tls_cert_path }}" \
-             -keyout "{{ vault_tls_key_path }}"
+openssl req \
+         -new \
+         -newkey rsa:4096 \
+         -x509 \
+         -sha256 \
+         -days 365 \
+         -nodes \
+         -subj "/C=GB/ST=London/L=London/O=IT/OU=IT/CN=${cn}" \
+         -out "{{ vault_tls_cert_path }}" \
+         -keyout "{{ vault_tls_key_path }}"
 
 chmod 600 {{ vault_tls_key_path }}
